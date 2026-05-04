@@ -1,38 +1,24 @@
 # Middleware Application
 
-Multi-module middleware integration platform with connectors, distribution, transformation, batch orchestration, custom logic, and operations utilities.
+Production-ready module skeleton for an enterprise middleware platform, including connectors, distributor patterns, transformations, batch orchestration, custom logic hooks, and operations utilities.
 
-## Build System
+## Modules
+- `platform-common`: canonical message envelope + shared utilities.
+- `connector-service`: ingress/egress connector queue abstraction (Kafka/JMS/API adapter baseline).
+- `distributor-service`: splitter, join/aggregator, conditional route selection.
+- `transformation-service`: XML↔JSON + Mustache/FTL-style template transformations.
+- `batch-service`: chunking engine baseline for batch processing.
+- `custom-logic-service`: pluggable payload logic execution.
+- `ops-service`: audit storage, purge, manual reprocess APIs.
 
-This project uses a **Maven multi-module build** with Java 17.
+## Build & verification
 
-### Included Maven modules
-- `platform-common`
-- `connector-service`
-- `distributor-service`
-- `transformation-service`
-- `batch-service`
-- `custom-logic-service`
-- `ops-service`
-
-### Non-build folders
-- `admin-ui` (UI placeholder)
-- `infra` (deployment/infrastructure placeholder)
-- `docs` (requirements and implementation plan)
-
-## Quick start
-
+### Compile and run full scenario validation (no network needed)
 ```bash
-mvn clean test
+rm -rf out && mkdir -p out && javac -d out $(find platform-common/src/main/java connector-service/src/main/java distributor-service/src/main/java transformation-service/src/main/java batch-service/src/main/java custom-logic-service/src/main/java ops-service/src/main/java tests -name '*.java') && java -ea -cp out ScenarioTest
 ```
 
+### Maven packaging (requires access to Maven Central)
 ```bash
-mvn clean package
+mvn -DskipTests package
 ```
-
-## Next implementation steps
-
-1. Add connector adapters (Kafka/JMS/HTTP) in `connector-service`.
-2. Add splitter/join/conditional routing in `distributor-service`.
-3. Add XML↔JSON + FTL/Mustache transformation engine in `transformation-service`.
-4. Add batch orchestration, auditing, and reprocess flows.
